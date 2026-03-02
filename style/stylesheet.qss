@@ -1,0 +1,19 @@
+/* dialog对话框的logindialog和registerdialog设置背景色 */
+QDialog#LoginDialog,
+QDialog#RegisterDialog {
+    background-color: rgb(255,255,255);
+}
+
+QLabel#acd_label,
+QLabel#psd_label {
+    color: black;
+}
+QLabel#tip_lable[state='normal']
+{
+    color: green;
+}
+
+QLabel#tip_lable[state='err']
+{
+    color: red;
+}
