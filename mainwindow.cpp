@@ -30,7 +30,7 @@ void MainWindow::slot_switch_reg()
     // this->login_dialog->hide();
     // this->setCentralWidget(this->register_dialog);
     // this->register_dialog->show();
-    //  setCentralWidget会删除旧的widget，this->register_dialog会被delete
+    // setCentralWidget会删除旧的widget，this->register_dialog会被delete
     this->stack_widget->setCurrentWidget(this->register_dialog);
 }
 

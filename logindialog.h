@@ -15,6 +15,7 @@ public:
     explicit LoginDialog(QWidget *parent = nullptr);
     ~LoginDialog();
 signals:
+    //切换注册窗口的信号
     void switch_register();
 private:
 

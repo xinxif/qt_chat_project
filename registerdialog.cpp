@@ -1,10 +1,11 @@
 #include "registerdialog.h"
 #include "global.h"
 #include "ui_registerdialog.h"
-
+#include"httpmgr.h"
 RegisterDialog::RegisterDialog(QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::RegisterDialog)
+    ,handlers()
 {
     ui->setupUi(this);
 
@@ -13,6 +14,9 @@ RegisterDialog::RegisterDialog(QWidget *parent)
     ui->tip_lable->setProperty("state","normal");
     repolish(ui->tip_lable);
     connect(ui->cancel_btn,&QPushButton::clicked,this,&RegisterDialog::swtich_login);
+
+    //
+    connect(HttpMgr::get_instance().get(),&HttpMgr::sig_reg_mod_finish,this,&RegisterDialog::slot_reg_mod_finish);
 }
 
 RegisterDialog::~RegisterDialog()
@@ -36,6 +40,33 @@ void RegisterDialog::on_get_verify_btn_clicked()
     }
 }
 
+void RegisterDialog::slot_reg_mod_finish(const ReqId id,const  QString &res,const ErrorCodes err)
+{
+    if(err!=ErrorCodes::SUCCESS)
+    {
+        this->show_tip(tr("网络请求错误"),false);
+        return;
+    }
+    // 解析 JSON 字符串,res需转化为QByteArray
+    QJsonDocument jsonDoc = QJsonDocument::fromJson(res.toUtf8());
+    //json解析错误
+    if(jsonDoc.isNull()){
+        show_tip(tr("json解析错误"),false);
+        return;
+    }
+
+    //json解析错误
+    if(!jsonDoc.isObject()){
+        show_tip(tr("json解析错误"),false);
+        return;
+    }
+
+    QJsonObject jsonObj = jsonDoc.object();
+
+
+    handlers[id](jsonObj);
+}
+
 void RegisterDialog::show_tip(const QString &msg, const bool ok)
 {
 
@@ -50,5 +81,21 @@ void RegisterDialog::show_tip(const QString &msg, const bool ok)
     }
     ui->tip_lable->setText(msg);
     repolish(ui->tip_lable);
+}
+
+void RegisterDialog::init_http_handlers()
+{
+    handlers.insert(ReqId::ID_GET_VERIFY_CODE,[this](const QJsonObject &json_obj){
+        int error = json_obj["error"].toInt();
+        if(error!=static_cast<int>(ErrorCodes::SUCCESS))
+        {
+            show_tip(tr("参数错误"),false);
+            return;
+        }
+
+        auto email = json_obj["email"].toString();
+        show_tip(tr("验证码已发送到邮箱，注意查收"),true);
+        qDebug()<< "email is " << email ;
+    });
 }
 

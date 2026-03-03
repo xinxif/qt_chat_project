@@ -28,6 +28,8 @@ private:
     Ui::MainWindow *ui;
     LoginDialog* login_dialog;
     RegisterDialog* register_dialog;
+
+    //管理多个widget的切换
     QStackedWidget* stack_widget;
 
 };

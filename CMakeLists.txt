@@ -11,6 +11,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Network REQUIRED) #添加网络模块
 
 set(PROJECT_SOURCES
         main.cpp
@@ -28,6 +29,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         registerdialog.h registerdialog.cpp registerdialog.ui
         global.h
         global.cpp
+        singleton.h
+        httpmgr.h httpmgr.cpp
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET Chat APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
@@ -48,7 +51,7 @@ else()
 endif()
 
 target_link_libraries(Chat PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
-
+target_link_libraries(Chat PRIVATE Qt${QT_VERSION_MAJOR}::Network) # 连接网络模块
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
 # If you are developing for iOS or macOS you should consider setting an
 # explicit, fixed bundle identifier manually though.
