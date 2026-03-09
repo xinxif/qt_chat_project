@@ -1,21 +1,19 @@
 #ifndef _CSERVER_H
 #define _CSERVER_H
 #include"const.h"
-
 class CServer :public std::enable_shared_from_this<CServer>
 {
 public:
-	//alt + enter Ñ¡ÔñÉú³É¶¨Òå
-	CServer(boost::asio::io_context& ioc, const unsigned short port);
+	//alt + enter æ·»åŠ å®ç°
+	CServer(boost::asio::io_context& ioc, unsigned short& port);
 	void Start();
 private:
 	
-
+private:
+	//æ³¨æ„è¿™ä¸‰ä¸ªçš„åˆå§‹åŒ–é¡ºåº
 	tcp::acceptor  _acceptor;
-	//Ã»ÓĞ¿½±´¹¹Ôìº¯Êı
 	net::io_context& _ioc;
-
-	boost::asio::ip::tcp::socket   _socket;
+	boost::asio::ip::tcp::socket  _socket;
 };
 
 #endif // !_CSERVER_H
