@@ -29,7 +29,8 @@ void HttpMgr::post_http_req(const QUrl &url, const QJsonObject &json, const ReqI
     QNetworkReply *reply = manager.post(request, data);
 
     // 7. 核心：建立信号槽连接。当服务器响应完成（成功或失败）时，会触发 reply 的 finished 信号
-    QObject::connect(reply, &QNetworkReply::finished, [self, reply, id, mod]() {
+    QObject::connect(reply, &QNetworkReply::finished, [self, reply, id, mod]()
+    {
 
         // --- 以下代码在请求完成后（可能在几百毫秒后）异步执行 ---
 

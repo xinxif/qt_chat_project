@@ -15,6 +15,9 @@ RegisterDialog::RegisterDialog(QWidget *parent)
     repolish(ui->tip_lable);
     connect(ui->cancel_btn,&QPushButton::clicked,this,&RegisterDialog::swtich_login);
 
+    //初始化HTTP处理器
+    init_http_handlers();
+    
     //
     connect(HttpMgr::get_instance().get(),&HttpMgr::sig_reg_mod_finish,this,&RegisterDialog::slot_reg_mod_finish);
 }
@@ -66,8 +69,15 @@ void RegisterDialog::slot_reg_mod_finish(const ReqId id,const  QString &res,cons
 
     QJsonObject jsonObj = jsonDoc.object();
 
-
-    handlers[id](jsonObj);
+    //检查处理器是否存在，防止调用空函数
+    if(handlers.contains(id))
+    {
+        handlers[id](jsonObj);
+    }
+    else
+    {
+        qWarning() << "No handler found for request id:" << static_cast<int>(id);
+    }
 }
 
 void RegisterDialog::show_tip(const QString &msg, const bool ok)
@@ -88,7 +98,8 @@ void RegisterDialog::show_tip(const QString &msg, const bool ok)
 
 void RegisterDialog::init_http_handlers()
 {
-    handlers.insert(ReqId::ID_GET_VERIFY_CODE,[this](const QJsonObject &json_obj){
+    handlers.insert(ReqId::ID_GET_VERIFY_CODE,[this](const QJsonObject &json_obj)
+    {
         int error = json_obj["error"].toInt();
         if(error!=static_cast<int>(ErrorCodes::SUCCESS))
         {
