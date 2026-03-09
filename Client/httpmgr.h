@@ -21,11 +21,12 @@ class HttpMgr : public QObject,public Singleton<HttpMgr>,
     friend class Singleton<HttpMgr>;
 public:
     ~HttpMgr()=default;
+    //地址，数据，具体功能ID，模块
+    void post_http_req(const QUrl& url,const QJsonObject &json,const ReqId id,const Modules mod);
 private:
 
     HttpMgr();
-    //地址，数据，具体功能ID，模块
-    void post_http_req(const QUrl& url,const QJsonObject &json,const ReqId id,const Modules mod);
+
 
     QNetworkAccessManager manager;
 

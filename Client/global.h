@@ -6,7 +6,7 @@
 
 //Qt 在运行时修改动态属性后： 样式不会自动刷新，需要手动刷新
 extern std::function<void(QWidget*)> repolish;
-
+extern QString gate_url_prefix;
 enum class ReqId
 {
     ID_GET_VERIFY_CODE = 1001,  //获取验证码

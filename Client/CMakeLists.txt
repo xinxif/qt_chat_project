@@ -31,6 +31,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         global.cpp
         singleton.h
         httpmgr.h httpmgr.cpp
+        config.ini
+        config.ini
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET Chat APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
@@ -55,6 +57,19 @@ target_link_libraries(Chat PRIVATE Qt${QT_VERSION_MAJOR}::Network) # 连接网�
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
 # If you are developing for iOS or macOS you should consider setting an
 # explicit, fixed bundle identifier manually though.
+
+# 定义要拷贝的配置文件名
+set(CONFIG_FILE_NAME "config.ini")
+
+# 跨平台自动拷贝逻辑
+add_custom_command(TARGET Chat POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        "${CMAKE_CURRENT_SOURCE_DIR}/${CONFIG_FILE_NAME}"
+        "$<TARGET_FILE_DIR:Chat>/${CONFIG_FILE_NAME}"
+    COMMENT "Copying ${CONFIG_FILE_NAME} to the output directory..."
+    VERBATIM
+)
+
 if(${QT_VERSION} VERSION_LESS 6.1.0)
   set(BUNDLE_ID_OPTION MACOSX_BUNDLE_GUI_IDENTIFIER com.example.Chat)
 endif()
