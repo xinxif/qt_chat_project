@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package message;
+
+service VarifyService //提供的服务叫这个名字
+{
+  rpc GetVarifyCode (GetVarifyReq) returns (GetVarifyRsp) {}
+}
+//发给服务器的请求包裹，里面只装了一样东西：email
+message GetVarifyReq 
+{
+  string email = 1;
+}
+//服务器回给你的响应包裹，里面装了三样东西：error（错误码，0通常代表成功）、email（邮箱）、code（生成的验证码）
+message GetVarifyRsp {
+  int32 error = 1;
+  string email = 2;
+  string code = 3;
+}
+

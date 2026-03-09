@@ -35,8 +35,6 @@ private slots:
     //通知注册模块http请求完成
     void slot_http_finish(const ReqId id,const QString &res, const ErrorCodes err,const Modules mod);
 
-
-
 signals:
     //http请求发送
     void sig_http_finish(const ReqId id,const QString&result,const ErrorCodes err,const Modules mod);

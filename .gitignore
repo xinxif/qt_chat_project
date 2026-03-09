@@ -1,5 +1,7 @@
 Client/build/
+build/
 Server/GateServer/Debug
 Server/GateServer/x64
 Server/GateServer/.vs
+Server/VerifyServer/node_modules
 CMakeLists.txt.user

@@ -1,5 +1,6 @@
 #include"HttpConnection.h"
 #include"LogicSystem.h"
+#include"VerifyGrpcClient.h"
 LogicSystem::LogicSystem():_post_handlers(), _get_handlers()
 {
 	RegGet("/get_test", [](std::shared_ptr<HttpConnection> connect) 
@@ -39,8 +40,11 @@ LogicSystem::LogicSystem():_post_handlers(), _get_handlers()
 		}
 
 		auto email = src_root["email"].toStyledString();
+
+		GetVarifyRsp rsp = VerifyGrpcClient::GetInstance()->GetVarifyCode(email);
+
 		std::cout << "email is " << email << std::endl;
-		root["error"] = 0;//jsoncpp的设计与map类似
+		root["error"] = rsp.error();	//jsoncpp的设计与map类似
 		root["email"] = src_root["email"];
 
 		std::string jsonstr = root.toStyledString();
