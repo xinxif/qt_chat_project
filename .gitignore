@@ -2,3 +2,4 @@ Client/build/
 Server/GateServer/Debug
 Server/GateServer/x64
 Server/GateServer/.vs
+CMakeLists.txt.user

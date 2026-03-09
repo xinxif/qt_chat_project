@@ -2,7 +2,18 @@
 #include"LogicSystem.h"
 LogicSystem::LogicSystem():_post_handlers(), _get_handlers()
 {
-	RegGet("/get_test", [](std::shared_ptr<HttpConnection> connect) {beast::ostream(connect->_response.body()) << "receive get_test req\r\n"; });
+	RegGet("/get_test", [](std::shared_ptr<HttpConnection> connect) 
+		{
+			beast::ostream(connect->_response.body()) << "receive get_test req\r\n"; 
+			int i = 0;
+			for (const auto& elem : connect->_get_params)
+			{
+				++i;
+				beast::ostream(connect->_response.body()) << "param " << i << " key is " << elem.first;
+				beast::ostream(connect->_response.body()) << " , " << " value is " << elem.second << "\n";
+			}
+		});
+
 }
 
 void LogicSystem::RegGet(const std::string& url, HttpHandler handler)
