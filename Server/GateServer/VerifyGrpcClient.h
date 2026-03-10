@@ -14,39 +14,40 @@ using message::GetVarifyReq;
 using message::GetVarifyRsp;
 using message::VarifyService;
 
+class RPConPool
+{
+public:
+	RPConPool(const std::size_t poolSize, const std::string& host, const std::string& port);
+	std::unique_ptr<VarifyService::Stub> getConnection();
+	void recycleConnection(std::unique_ptr<VarifyService::Stub> context);
+
+	~RPConPool();
+private:
+
+	void Close();
+
+
+	std::atomic<bool> b_stop_;
+	std::size_t poolSize_;
+	std::string host_;
+	std::string port_;
+	std::queue<std::unique_ptr<VarifyService::Stub>> connections_;
+	std::mutex mutex_;
+	std::condition_variable cond_;
+};
+
+
 class VerifyGrpcClient :public Singleton<VerifyGrpcClient>
 {
-    friend class Singleton<VerifyGrpcClient>;
+	friend class Singleton<VerifyGrpcClient>;
 public:
 
-    GetVarifyRsp GetVarifyCode(std::string email) {
-        //准备好上下文（比如设置超时时间等，这里没设置就是默认）
-        ClientContext context;
-        GetVarifyRsp reply;         // 准备一个空包裹，用来装服务器返回的结果
-        GetVarifyReq request;       // 准备发送给服务器的包裹
-        request.set_email(email);   // 把你要验证的邮箱塞进包裹里
-
-        //通过 stub_ (代理人) 发送请求，程序会在这里等待服务器回复
-        Status status = stub_->GetVarifyCode(&context, request, &reply);
-
-        if (status.ok()) {
-
-            return reply;
-        }
-        else {
-            reply.set_error(static_cast<int>(ErrorCodes::RPCFailed));
-            return reply;
-        }
-    }
+	GetVarifyRsp GetVarifyCode(const std::string &email);
 
 private:
-    VerifyGrpcClient() 
-    {
-        std::shared_ptr<Channel> channel = grpc::CreateChannel("127.0.0.1:50051", grpc::InsecureChannelCredentials());
-        stub_ = VarifyService::NewStub(channel);
-    }
+	VerifyGrpcClient();
 
-    std::unique_ptr<VarifyService::Stub> stub_;
+	std::unique_ptr<RPConPool> pool_;
 };
 
 

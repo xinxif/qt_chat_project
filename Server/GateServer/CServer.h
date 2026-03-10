@@ -13,7 +13,6 @@ private:
 	//注意这三个的初始化顺序
 	tcp::acceptor  _acceptor;
 	net::io_context& _ioc;
-	boost::asio::ip::tcp::socket  _socket;
 };
 
 #endif // !_CSERVER_H

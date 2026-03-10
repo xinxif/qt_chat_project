@@ -31,13 +31,12 @@ private:
 class ConfigMgr
 {
 public:
-	ConfigMgr();
-
-	ConfigMgr(const ConfigMgr& src) {
-		this->_config_map = src._config_map;
+	static ConfigMgr& Inst() {
+		static ConfigMgr cfg_mgr;
+		return cfg_mgr;
 	}
-	~ConfigMgr() = default;
 
+	~ConfigMgr() = default;
 	SectionInfo operator[](const std::string& section) const
 	{
 		auto it = _config_map.find(section);
@@ -48,6 +47,13 @@ public:
 		
 		return it->second;
 	}
+private:
+	ConfigMgr();
+
+	ConfigMgr(const ConfigMgr& src) {
+		this->_config_map = src._config_map;
+	}
+
 	ConfigMgr& operator=(const ConfigMgr& src) {
 		if (&src == this) {
 			return *this;
@@ -55,10 +61,7 @@ public:
 
 		this->_config_map = src._config_map;
 	};
-	
-	
 
-private:
 	// ´æ´¢sectionºÍkey-value¶ÔµÄmap  
 	std::map<std::string, SectionInfo> _config_map;
 };
