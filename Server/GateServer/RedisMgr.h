@@ -4,21 +4,44 @@
 #include "Singleton.h"
 #include "hiredis.h"
 #include <memory>
-#include<initializer_list>
+#include <initializer_list>
+#include <atomic>
 
-class RedisMgr: public Singleton<RedisMgr>,
-                public std::enable_shared_from_this<RedisMgr>
+class RedisConPool:public std::enable_shared_from_this<RedisConPool>
+{
+public:
+    RedisConPool(const std::string& host, const int port, const std::string& pwd
+                ,const std::size_t pool_size = std::thread::hardware_concurrency());
+    
+    ~RedisConPool();
+    std::shared_ptr<redisContext> getConnection();
+    void Close();
+private:
+    redisContext* connect(const std::string& host, const int port, const std::string& pwd);
+    void returnConnection(redisContext* context);
+
+    std::atomic<bool> b_stop_;
+    std::size_t poolSize_;
+    std::string host_;
+    int port_;
+    std::queue<redisContext*> connections_;
+    std::mutex mutex;
+    std::condition_variable cond_;
+};
+class RedisMgr: public Singleton<RedisMgr>
+                //,public std::enable_shared_from_this<RedisMgr>
 {
  
     friend class Singleton<RedisMgr>;
+
                                  //左侧push
 	enum command { GET, SET, AUTH, LPUSH, LPOP, RPUSH, RPOP, HSET, HGET, DEL, EXISTS };
 public:
     ~RedisMgr();
-    bool Connect(const std::string& host,const int port);
+    //bool Connect(const std::string& host,const int port);
     bool Get(const std::string& key, std::string& value);
     bool Set(const std::string& key, const std::string& value);
-    bool Auth(const std::string& password);
+    //bool Auth(const std::string& password);
     bool LPush(const std::string& key, const std::string& value);
     bool LPop(const std::string& key, std::string& value);
     bool RPush(const std::string& key, const std::string& value);
@@ -39,8 +62,7 @@ private:
     int fd;             // socket fd
     }redisContext;
     */
-    redisContext* _connect;
-
+    //redisContext* _connect;
     /*
     typedef struct redisReply {
     int type;                       返回类型 
@@ -51,6 +73,8 @@ private:
     struct redisReply** element;    数组元素指针 
     } redisReply;
     */
-    redisReply* _reply;
+    //redisReply* _reply;
+
+    std::unique_ptr<RedisConPool> con_pool_;
 };
 #endif
