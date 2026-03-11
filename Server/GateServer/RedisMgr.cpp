@@ -80,13 +80,13 @@ std::shared_ptr<redisContext> RedisConPool::getConnection()
 	{
 		return std::shared_ptr<redisContext>();
 	}
-	auto self = shared_from_this();
+	//auto self = shared_from_this();
 	auto connect = std::shared_ptr<redisContext>(connections_.front(),
-		[self](redisContext* c)
+		[this](redisContext* c)
 		{
 			if (c)
 			{
-				self->returnConnection(c);
+				this->returnConnection(c);
 			}
 			std::cout << "自动归还成功\n";
 		});

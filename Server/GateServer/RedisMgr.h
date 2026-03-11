@@ -7,7 +7,7 @@
 #include <initializer_list>
 #include <atomic>
 
-class RedisConPool:public std::enable_shared_from_this<RedisConPool>
+class RedisConPool//:public std::enable_shared_from_this<RedisConPool>
 {
 public:
     RedisConPool(const std::string& host, const int port, const std::string& pwd
