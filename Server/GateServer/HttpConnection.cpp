@@ -8,6 +8,7 @@
 	http::response<http::dynamic_body> _response;
 	net::steady_timer deadline_;
 */
+
 HttpConnection::HttpConnection(net::io_context& ioc)
 	:_socket(ioc), _buffer(), _request(), _response(),
 	deadline_(_socket.get_executor(), std::chrono::seconds(60))

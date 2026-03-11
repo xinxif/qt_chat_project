@@ -14,7 +14,7 @@ const PROTO_PATH = path.join(__dirname,"message.proto")
 //options?: proto_loader.Options
 //? 表示这是一个可选参数
 //proto_loader.Options定义了参数的具体“长相”
-//
+
 const package_definition = proto_loder.loadSync(PROTO_PATH,{ 
                                                 keepCase: true, //如果为 true，则保留字段名的原始大小写
                                                 longs: String, //控制如何表示 Protocol Buffers 中的 long 类型。如果设置为 String，则长整数会被转换为字符串，以避免 JavaScript 中的整数溢出问题。

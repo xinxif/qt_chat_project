@@ -3,5 +3,11 @@
     {
         "user":"m15671235719@163.com",
         "pass":"SQVJm9WCFjyafwBu"
+    },
+    "redis":
+    {
+        "host":"127.0.0.1",
+        "port":"6380",
+        "passwd":"123456"
     }
 }

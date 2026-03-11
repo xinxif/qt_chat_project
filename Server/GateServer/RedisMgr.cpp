@@ -80,6 +80,11 @@ std::shared_ptr<redisContext> RedisConPool::getConnection()
 	{
 		return std::shared_ptr<redisContext>();
 	}
+	/*
+		在 C++ 中，std::enable_shared_from_this 的工作原理是依赖外部的一个 std::shared_ptr 来维护对象的“控制块（Control Block）”。
+		当你把 con_pool_ 声明为 std::unique_ptr 时，它根本不会创建这个控制块。
+		因此，当你在 RedisConPool 内部调用 shared_from_this() 时，系统找不到控制块，只能直接抛出 std::bad_weak_ptr 导致程序崩溃。
+	*/
 	//auto self = shared_from_this();
 	auto connect = std::shared_ptr<redisContext>(connections_.front(),
 		[this](redisContext* c)

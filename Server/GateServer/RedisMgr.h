@@ -6,6 +6,11 @@
 #include <memory>
 #include <initializer_list>
 #include <atomic>
+#include <string>
+#include <queue>
+#include <mutex>
+#include <condition_variable>
+#include <thread>
 
 class RedisConPool//:public std::enable_shared_from_this<RedisConPool>
 {

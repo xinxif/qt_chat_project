@@ -21,6 +21,8 @@ signals:
 private slots:
     void on_get_verify_btn_clicked();
     void slot_reg_mod_finish(const ReqId id,const  QString &res,const ErrorCodes err);
+    void on_confirm_btn_clicked();
+
 private:
     //注册窗口的提示信息
     void show_tip(const QString&msg,const bool ok);
